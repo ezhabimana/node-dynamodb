@@ -159,6 +159,7 @@ const dynamoDbClient = new AWS.DynamoDB.DocumentClient(dynamoDbClientParams);
 After that, running the following command with start both local API Gateway emulator as well as local instance of emulated DynamoDB:
 
 ```bash
+serverless dynamodb install
 serverless offline start
 ```
 

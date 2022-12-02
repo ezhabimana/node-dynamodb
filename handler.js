@@ -5,7 +5,12 @@ const serverless = require("serverless-http");
 const app = express();
 
 const USERS_TABLE = process.env.USERS_TABLE;
-const dynamoDbClient = new AWS.DynamoDB.DocumentClient();
+const dynamoDbClientParams = {};
+if (process.env.IS_OFFLINE) {
+  dynamoDbClientParams.region = 'localhost'
+  dynamoDbClientParams.endpoint = 'http://localhost:8000'
+}
+const dynamoDbClient = new AWS.DynamoDB.DocumentClient(dynamoDbClientParams);
 
 app.use(express.json());
 
@@ -20,8 +25,8 @@ app.get("/users/:userId", async function (req, res) {
   try {
     const { Item } = await dynamoDbClient.get(params).promise();
     if (Item) {
-      const { userId, name } = Item;
-      res.json({ userId, name });
+      const { userId, name, gender } = Item;
+      res.json({ userId, name, gender });
     } else {
       res
         .status(404)
